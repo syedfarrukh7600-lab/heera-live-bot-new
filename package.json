@@ -1,0 +1,12 @@
+{
+  "name": "heera-live-bot-new-mmco",
+  "version": "1.0.0",
+  "description": "Heera AI Bot Live",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.21.1"
+  }
+}
