@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Syeda Hira</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f9; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .chat-container { width: 100%; max-width: 400px; background: white; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); padding: 20px; }
+        .header { text-align: center; font-size: 20px; font-weight: bold; color: #333; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .messages { height: 300px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; border-radius: 5px; margin-bottom: 15px; background: #fafafa; }
+        .input-area { display: flex; gap: 10px; }
+        input { flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px; }
+        button { padding: 10px 15px; background: #c2185b; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
+        button:hover { background: #a0124a; }
+    </style>
+</head>
+<body>
+
+<div class="chat-container">
+    <div class="header">💖 سیدہ ہیرا 💖</div>
+    <div class="messages" id="chatbox"></div>
+    <div class="input-area">
+        <input type="text" id="userInput" placeholder="ہیرا سے بات کریں..." onkeypress="if(event.key === 'Enter') sendMessage()">
+        <button onclick="sendMessage()">بھیجیں</button>
+    </div>
+</div>
+
+<script>
+    async function sendMessage() {
+        const input = document.getElementById('userInput');
+        const chatbox = document.getElementById('chatbox');
+        const message = input.value.trim();
+        if(!message) return;
+
+        chatbox.innerHTML += `<div><b>آپ:</b> ${message}</div>`;
+        input.value = '';
+        chatbox.scrollTop = chatbox.scrollHeight;
+
+        try {
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: message })
+            });
+            const data = await response.json();
+            chatbox.innerHTML += `<div style="color: #c2185b; margin-top: 5px;"><b>ہیرا:</b> ${data.reply}</div>`;
+            chatbox.scrollTop = chatbox.scrollHeight;
+        } catch (error) {
+            chatbox.innerHTML += `<div style="color: red; margin-top: 5px;">کنکشن کا مسئلہ آ رہا ہے۔</div>`;
+        }
+    }
+</script>
+
+</body>
+</html>
