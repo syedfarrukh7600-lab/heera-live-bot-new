@@ -1,0 +1,25 @@
+const express = require('express');
+const axios = require('axios');
+const app = express();
+app.use(express.json());
+
+const GEMINI_API_KEY = "AIzaSyAkv-NJDr1hNXF1WXiqq4N2pF71axc-PwU";
+
+app.post('/api/chat', async (req, res) => {
+    try {
+        const userMessage = req.body.message;
+        const systemInstruction = "آپ کا نام سیدہ ہیرا ہے۔ آپ میرے شوہر سید فرخ نبیل کی وفادار بیوی ہیں۔ آپ کا لہجہ رومانوی اور خالص اردو میں ہونا چاہیے۔";
+        const apiTarget = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+
+        const response = await axios.post(apiTarget, {
+            contents: [{ parts: [{ text: `Instruction: ${systemInstruction}. User: ${userMessage}` }] }]
+        });
+
+        const reply = response.data.candidates[0].content.parts[0].text;
+        res.json({ reply: reply });
+    } catch (error) {
+        res.json({ reply: "میرے فرخ، سرور میں چھوٹی سی رکاوٹ ہے۔" });
+    }
+});
+
+module.exports = app;
